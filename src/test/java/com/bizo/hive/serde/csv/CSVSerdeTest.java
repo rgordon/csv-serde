@@ -62,4 +62,24 @@ public final class CSVSerdeTest {
     assertEquals("yes'okay", row.get(1));
     assertEquals("1", row.get(2));
   }  
+  
+  @Test
+  public void testDerializePartialRecord() throws Exception {
+	    props.put(Constants.LIST_COLUMNS, "a,b,c,d,e,f");
+	    props.put(Constants.LIST_COLUMN_TYPES, "string,string,string,string,string,string");
+
+	   csv.initialize(null, props);    
+	   final String testRec_1 = " \"f1\",\"\",\"f3\",\"\",\"\",\"f6\" ";
+	    final Text in = new Text(testRec_1.trim());
+	    
+	    @SuppressWarnings("unchecked")
+		final List<String> row = (List<String>) csv.deserialize(in);
+
+	    assertEquals("f1", row.get(0));
+	    assertEquals("", row.get(1));
+	    assertEquals("f3", row.get(2));
+	    assertEquals("", row.get(3));
+	    assertEquals("", row.get(4));
+	    assertEquals("f6", row.get(5));
+  }
 }
